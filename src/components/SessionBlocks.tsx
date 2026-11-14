@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Msg, useRpc } from "./client";
 import { Markdown } from "./Markdown";
+import { Card } from "./ui";
 
 /** Bloco de texto de uma sessão (roteiro, anotações do Mestre ou do grupo). Grava por RPC; o banco decide quem pode. */
 export function SessionText({ rpc, args, initial, canEdit, hint, empty, startOpen = false }: {
@@ -42,14 +43,20 @@ export function NextSession({ campaignId, base, title, script, nextNumber }: { c
   };
   const startBtn = <button className="btn btn-primary" disabled={busy} onClick={start}>▶ Iniciar próxima sessão</button>;
   if (!editing) return (
-    <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-2"><span className="badge border-wine-400 text-xs">🔒 só você vê</span>{title && <strong>{title}</strong>}</div>
-      {script ? <div className="text-sm text-parch-100/90"><Markdown source={script} /></div> : <p className="text-sm text-parch-500">Sem roteiro escrito.</p>}
-      <div className="flex flex-wrap gap-2"><button className="btn btn-sm" onClick={() => { setT(title); setS(script); setEditing(true); }}>Editar</button>{startBtn}</div>
-      <Msg m={msg} />
-    </div>
+    <>
+      <Card title={`Roteiro da sessão ${nextNumber}${title ? ` — ${title}` : ""} (privado)`} actions={<span className="badge border-wine-400 text-xs">🔒 só você vê</span>}>
+        <div className="space-y-3">
+          {script ? <div className="text-sm text-parch-100/90"><Markdown source={script} /></div> : <p className="text-sm text-parch-500">Sem roteiro escrito.</p>}
+          <button className="btn btn-sm" onClick={() => { setT(title); setS(script); setEditing(true); }}>Editar</button>
+        </div>
+      </Card>
+      <Card title={`Próxima sessão (${nextNumber})`}>
+        <div className="space-y-2">{startBtn}<Msg m={msg} /></div>
+      </Card>
+    </>
   );
   return (
+    <Card title={`Próxima sessão (${nextNumber})`}>
     <div className="space-y-2">
       <div><label className="label" htmlFor="ns-t">Título (opcional)</label><input id="ns-t" className="input" value={t} onChange={(e) => setT(e.target.value)} placeholder={`Sessão ${nextNumber}`} /></div>
       <div><label className="label" htmlFor="ns-s">Roteiro da próxima sessão <span className="badge ml-1 border-wine-400 text-xs">🔒 só você vê</span></label>
@@ -63,5 +70,6 @@ export function NextSession({ campaignId, base, title, script, nextNumber }: { c
       </div>
       <Msg m={msg} />
     </div>
+    </Card>
   );
 }

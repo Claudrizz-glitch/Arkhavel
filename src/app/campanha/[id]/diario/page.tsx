@@ -35,9 +35,7 @@ export default async function Diario({ params, searchParams }: { params: Promise
       </nav>
       <div className="space-y-4 lg:col-span-3">
         {gm && (
-          <Card title={`Próxima sessão (${nextNumber})`}>
-            <NextSession key={draft?.id ?? "novo"} campaignId={id} base={base} title={draft?.title ?? ""} script={draft ? gmOf(draft.id)?.script ?? "" : ""} nextNumber={nextNumber} />
-          </Card>)}
+          <NextSession key={draft?.id ?? "novo"} campaignId={id} base={base} title={draft?.title ?? ""} script={draft ? gmOf(draft.id)?.script ?? "" : ""} nextNumber={nextNumber} />)}
         {!sel ? <Empty>{gm ? "Escreva o roteiro acima e clique em “Iniciar próxima sessão”." : "O Mestre ainda não iniciou nenhuma sessão."}</Empty> : (
           <>
             <div><h2 className="text-2xl">{name(sel)}</h2><p className="text-sm text-parch-500">{sel.date_label}{sel.started_at ? ` · iniciada em ${new Date(sel.started_at).toLocaleDateString("pt-BR")}` : ""}</p></div>
